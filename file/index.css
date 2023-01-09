@@ -1,0 +1,10 @@
+.audio{
+    width:100%;
+  }
+  .audio audio{
+    margin: 0 auto;
+    display: table;
+  }
+body {
+   background-color: lightblue;
+  }
