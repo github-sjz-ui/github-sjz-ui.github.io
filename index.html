@@ -8,27 +8,47 @@
             margin: 0;
             padding: 0;
             height: 100%;
-            background: #0f0f0f;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: #fff;
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             overflow: hidden;
+            transition: background 0.5s ease;
         }
         .header {
             text-align: center;
             padding: 50px 0;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            background: rgba(30, 60, 114, 0.8);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: fadeIn 2s ease-in-out;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 3em;
+            letter-spacing: 2px;
         }
         .content {
             display: flex;
             justify-content: space-around;
             padding: 20px;
+            animation: slideIn 1.5s ease-out;
         }
         .section {
             width: 40%;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s;
         }
-        h2 {
-            border-bottom: 2px solid #fff;
-            padding-bottom: 10px;
+        .section:hover {
+            transform: scale(1.05);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(50px); }
+            to { transform: translateY(0); }
         }
         canvas {
             position: absolute;
@@ -52,36 +72,77 @@
     <div class="content">
         <div class="section" id="research">
             <h2>科研成果</h2>
-			<!-- 使用内联样式直接在HTML标签中设置 -->
-			<a href="关于一道高中物理光学的速度关联问题探究.pdf" style="text-decoration: none;color:white">关于一道高中物理光学的速度关联问题探究</a>
-			<br>
-			<br>
-			<a href="蹦极中的物理学.pdf" style="text-decoration: none;color:white">蹦极中的物理学</a>
+<!-- 使用内联样式直接在HTML标签中设置 -->
+<a href="关于一道高中物理光学的速度关联问题探究.pdf" style="text-decoration: none;color:white">关于一道高中物理光学的速度关联问题探究</a>
+<br>
+<br>
+<a href="蹦极中的物理学.pdf" style="text-decoration: none;color:white">蹦极中的物理学</a>
         </div>
         <div class="section" id="sharing">
             <h2>分享</h2>
             <a href="https://mp.weixin.qq.com/s/S4JJrbXP6mrLFg3T0VvVcw" style="text-decoration: none;color:white">2024年初首考后的抉择回望</a>
         </div>
     </div>
-    <canvas id="bgCanvas"></canvas>
+    <canvas id="canvas1"></canvas>
     <script>
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
+class Particle {
+    constructor(x, y, size, color, weight) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.color = color;
+        this.weight = weight;
+    }
 
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
+    update() {
+        this.y += this.weight;
+        this.weight += 0.05;
 
-        document.addEventListener('mousemove', (e) => {
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.beginPath();
-            ctx.arc(e.clientX, e.clientY, 15, 0, Math.PI * 2);
-            ctx.fill();
-        });
+        if (this.y > canvas.height - this.size) {
+            this.weight *= -0.5;
+            this.y = canvas.height - this.size;
+        }
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
+}
+
+const canvas = document.getElementById('canvas1');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particlesArray = [];
+const numberOfParticles = 100;
+
+function init() {
+    particlesArray = [];
+    for (let i = 0; i < numberOfParticles; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const size = (Math.random() * 5) + 2;
+        const color = '#fff';
+        const weight = 1;
+        particlesArray.push(new Particle(x, y, size, color, weight));
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let particle of particlesArray) {
+        particle.update();
+        particle.draw();
+    }
+    requestAnimationFrame(animate);
+}
+
+init();
+animate();
     </script>
 </body>
 </html>
