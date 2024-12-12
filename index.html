@@ -8,23 +8,28 @@
             margin: 0;
             padding: 0;
             height: 100%;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: #fff;
-            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8, #d9e2ec); /* 更新背景为浅色渐变 */
+            color: #4a4a4a; /* 更改字体颜色为深灰色 */
+            font-family: 'Ubuntu', 'Roboto', 'Helvetica Neue', Arial, sans-serif; /* 科技感字体 */
             overflow: hidden;
             transition: background 0.5s ease;
         }
         .header {
             text-align: center;
-            padding: 50px 0;
-            background: rgba(30, 60, 114, 0.8);
+            padding: 60px 0;
+            background: none; /* 去除背景，使其与整体背景一致 */
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             animation: fadeIn 2s ease-in-out;
         }
         .header h1 {
             margin: 0;
-            font-size: 3em;
+            font-size: 4em;
             letter-spacing: 2px;
+            color: #334e68; /* 修改主标题颜色为深蓝色 */
+        }
+        .header p {
+            letter-spacing: 1px;
+            color: #627d98; /* 修改次要信息颜色为灰蓝色 */
         }
         .content {
             display: flex;
@@ -34,13 +39,35 @@
         }
         .section {
             width: 40%;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.9); /* 设置为白色半透明背景 */
             padding: 20px;
             border-radius: 10px;
             transition: transform 0.3s;
+            border: 1px solid #cbd2d9; /* 添加浅灰色边框 */
+        }
+        .section h2 {
+            color: #334e68; /* 修改 section 标题颜色 */
+            text-align: center;
+            text-transform: uppercase;
         }
         .section:hover {
             transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .section a {
+            display: block;
+            margin: 3px 0; /* 减小上下间距 */
+            padding: 10px;
+            color: #1c7ed6; /* 修改链接颜色为蓝色 */
+            text-align: center;
+            border-radius: 5px;
+            transition: color 0.3s;
+            transition: transform 0.3s;
+            line-height: 1.0; /* 降低行高 */
+        }
+        .section a:hover {
+            transform: translateY(-5px);
+            color: #d6336c; /* 悬停时链接颜色变为粉红色 */
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -50,99 +77,34 @@
             from { transform: translateY(50px); }
             to { transform: translateY(0); }
         }
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
-    .underline {
-}
-    .color {
-}
-    .while {
-}
+    a {
+        text-decoration: none;
+    }
+    body {
+        opacity: 0;
+        animation: fadeInPage 1s forwards;
+    }
+    @keyframes fadeInPage {
+        to { opacity: 1; }
+    }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>沈纪中的个人网站&nbsp;</h1>
-        <p>杭州师范大学物理系在读</p>
+      <h1>沈纪中的个人网站&nbsp;</h1>
+      <p>杭州师范大学物理系在读</p>
     </div>
     <div class="content">
         <div class="section" id="research">
             <h2>科研成果</h2>
-<!-- 使用内联样式直接在HTML标签中设置 -->
-<a href="关于一道高中物理光学的速度关联问题探究.pdf" style="text-decoration: none;color:white">关于一道高中物理光学的速度关联问题探究</a>
+<a href="关于一道高中物理光学的速度关联问题探究.pdf" class="color">关于一道高中物理光学的速度关联问题探究</a>
 <br>
-<br>
-<a href="蹦极中的物理学.pdf" style="text-decoration: none;color:white">蹦极中的物理学</a>
+<a href="蹦极中的物理学.pdf" class="color">蹦极运动中物理学原理的探索</a>
         </div>
         <div class="section" id="sharing">
             <h2>分享</h2>
-            <a href="https://mp.weixin.qq.com/s/S4JJrbXP6mrLFg3T0VvVcw" style="text-decoration: none;color:white">2024年初首考后的抉择回望</a>
+            <a href="https://mp.weixin.qq.com/s/S4JJrbXP6mrLFg3T0VvVcw" class="color">2024年初首后的抉择回望</a>
         </div>
     </div>
-    <canvas id="canvas1"></canvas>
-    <script>
-class Particle {
-    constructor(x, y, size, color, weight) {
-        this.x = x;
-        this.y = y;
-        this.size = size;
-        this.color = color;
-        this.weight = weight;
-    }
-
-    update() {
-        this.y += this.weight;
-        this.weight += 0.05;
-
-        if (this.y > canvas.height - this.size) {
-            this.weight *= -0.5;
-            this.y = canvas.height - this.size;
-        }
-    }
-
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-    }
-}
-
-const canvas = document.getElementById('canvas1');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particlesArray = [];
-const numberOfParticles = 100;
-
-function init() {
-    particlesArray = [];
-    for (let i = 0; i < numberOfParticles; i++) {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
-        const size = (Math.random() * 5) + 2;
-        const color = '#fff';
-        const weight = 1;
-        particlesArray.push(new Particle(x, y, size, color, weight));
-    }
-}
-
-function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let particle of particlesArray) {
-        particle.update();
-        particle.draw();
-    }
-    requestAnimationFrame(animate);
-}
-
-init();
-animate();
-    </script>
 </body>
 </html>
