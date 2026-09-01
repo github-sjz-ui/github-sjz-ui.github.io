@@ -19,6 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="./content.js"></script>
 <style>
 /* ================= 主题变量 ================= */
 :root{
@@ -29,7 +30,6 @@
   --grad:linear-gradient(120deg,#00f0ff,#7b5cff 55%,#ff4ecd);
   --on-grad:#04050d;
   --track:rgba(255,255,255,.08); --nav-bg:rgba(5,6,15,.8); --menu-bg:rgba(5,6,15,.96);
-  --avatar-inner:#0a0d22;
 }
 html[data-theme="light"]{
   --bg:#f3f5fc; --panel:rgba(255,255,255,.78); --line:rgba(106,77,240,.18);
@@ -39,7 +39,6 @@ html[data-theme="light"]{
   --grad:linear-gradient(120deg,#0891b2,#6a4df0 55%,#d946b0);
   --on-grad:#ffffff;
   --track:rgba(26,33,56,.1); --nav-bg:rgba(255,255,255,.82); --menu-bg:rgba(255,255,255,.97);
-  --avatar-inner:#ffffff;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -140,14 +139,7 @@ section{padding:100px 6vw;position:relative}
 .reveal.visible{opacity:1;transform:none}
 
 /* ---------- 关于 ---------- */
-.about-grid{display:grid;grid-template-columns:280px 1fr;gap:50px;align-items:center}
-.avatar{aspect-ratio:1;border-radius:20px;position:relative;background:linear-gradient(135deg,var(--panel),transparent);border:1px solid var(--line);display:grid;place-items:center;overflow:hidden}
-.avatar::before{content:'';position:absolute;inset:-60%;background:conic-gradient(from 0deg,transparent 0 300deg,var(--accent),transparent);animation:spin 4s linear infinite;z-index:0}
-.avatar img{position:relative;z-index:1;width:88%;height:88%;object-fit:cover;border-radius:14px}
-.avatar .initials{position:relative;z-index:1;font-family:'Orbitron',sans-serif;font-size:4rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.avatar::after{content:'';position:absolute;inset:3px;border-radius:17px;background:var(--avatar-inner);z-index:0}
-@keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:820px){.about-grid{grid-template-columns:1fr}}
+.about-grid{max-width:1000px}
 .about-text p{color:var(--dim);line-height:1.9;margin-bottom:14px;font-size:1.05rem}
 .about-text p b{color:var(--text)}
 .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
@@ -239,12 +231,12 @@ footer a{color:var(--accent)}
 
 <header class="hero" id="home">
   <div class="tag">&lt;Hello_World /&gt;</div>
-  <h1><span data-i18n="hero_hi">你好，我是</span><br><span>Jizhong Shen</span></h1>
+  <h1><span data-i18n="hero_hi">你好，我是</span><br><span id="heroName">Jizhong Shen</span></h1>
   <div class="type-line"><span class="static" data-i18n="hero_prefix">我是 </span><span id="typed"></span></div>
   <p class="desc" data-i18n="hero_desc">用计算与建模理解物理系统：从蒙特卡洛模拟、高能与粒子物理到机器学习方法和科研教学工具。</p>
   <div class="btns">
     <a href="#works" class="btn primary"><i class="fa-solid fa-rocket"></i><span data-i18n="btn_works">研究成果</span></a>
-    <a href="https://github.com/github-sjz-ui" target="_blank" class="btn ghost"><i class="fa-brands fa-github"></i> GitHub</a>
+    <a href="https://github.com/github-sjz-ui" target="_blank" class="btn ghost js-gh-link"><i class="fa-brands fa-github"></i> GitHub</a>
   </div>
   <div class="stats">
     <div><div class="num"><span class="cnt" id="statPapers" data-count="9">0</span>+</div><div class="lab" data-i18n="stat_papers">论文</div></div>
@@ -258,30 +250,16 @@ footer a{color:var(--accent)}
 <section id="about">
   <div class="sec-head reveal"><div class="kicker">// 02 · ABOUT</div><h2 data-i18n="about_h2">关于<em>我</em></h2><div class="rule"></div></div>
   <div class="about-grid">
-    <div class="avatar tilt reveal"><div class="initials" id="avatarFallback">JS</div></div>
     <div class="about-text reveal">
-      <p data-i18n="about_p1">我是 <b>Jizhong Shen</b>（沈纪中），杭州师范大学物理系本科生，研究兴趣集中在 <b>计算物理、高能与粒子物理、蒙特卡洛模拟</b> 与机器学习方法。</p>
-      <p data-i18n="about_p2">我也在 GitHub（<b>github-sjz-ui</b>）上维护科研与教学工具，把 IYPT 建模、课程资料、文档生成和 AI 辅助学习等工作流程代码化。</p>
-      <div class="chips">
-        <span class="chip">Monte Carlo Simulation</span><span class="chip">High Energy Physics</span>
-        <span class="chip">Particle Physics</span><span class="chip">Computational Physics</span><span class="chip">Open Source</span>
-      </div>
+      <div id="aboutText"></div>
+      <div class="chips" id="aboutChips"></div>
     </div>
   </div>
 </section>
 
 <section id="research">
   <div class="sec-head reveal"><div class="kicker">// 03 · RESEARCH</div><h2 data-i18n="research_h2">研究<em>方向</em></h2><div class="rule"></div></div>
-  <div class="grid-3">
-    <div class="card tilt reveal"><div class="icon"><i class="fa-solid fa-diagram-project"></i></div>
-      <h3 data-i18n="dir1t">蒙特卡洛模拟</h3><p data-i18n="dir1d">面向粒子物理与高能物理问题的随机建模、事件模拟与统计验证。</p></div>
-    <div class="card tilt reveal"><div class="icon"><i class="fa-solid fa-share-nodes"></i></div>
-      <h3 data-i18n="dir2t">计算物理与建模</h3><p data-i18n="dir2d">结合 COMSOL、MATLAB、降阶模型和工程近似研究非线性动力学与波动现象。</p></div>
-    <div class="card tilt reveal"><div class="icon"><i class="fa-solid fa-chart-line"></i></div>
-      <h3 data-i18n="dir3t">物理与机器学习</h3><p data-i18n="dir3d">发展物理信息神经网络、代理模型和数据驱动方法，加速复杂物理系统分析。</p></div>
-    <div class="card tilt reveal"><div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
-      <h3 data-i18n="dir4t">科学工具与教育</h3><p data-i18n="dir4d">围绕物理学习、IYPT 准备与文档自动化构建开源工具，让研究流程更可复现。</p></div>
-  </div>
+  <div class="grid-3" id="researchGrid"></div>
 </section>
 
 <section id="works">
@@ -291,80 +269,33 @@ footer a{color:var(--accent)}
   <h3 class="sub-label reveal"><span data-i18n="works_repos">开源项目</span><span class="note" data-i18n="works_note">（在线时自动读取 GitHub 实时数据）</span></h3>
   <div class="grid-3" id="repoGrid"></div>
   <div style="margin-top:36px" class="reveal">
-    <a href="https://github.com/github-sjz-ui" target="_blank" class="btn ghost"><i class="fa-brands fa-github"></i><span data-i18n="view_all">查看全部仓库</span></a>
+    <a href="https://github.com/github-sjz-ui" target="_blank" class="btn ghost js-gh-link"><i class="fa-brands fa-github"></i><span data-i18n="view_all">查看全部仓库</span></a>
   </div>
 </section>
 
 <section id="skills">
   <div class="sec-head reveal"><div class="kicker">// 05 · SKILLS</div><h2 data-i18n="skills_h2">技术<em>栈</em></h2><div class="rule"></div></div>
-  <div class="skills">
-    <div class="reveal">
-      <div class="skill-row"><div class="top"><span data-i18n="sk1">Python / 科学计算</span><span>90%</span></div><div class="track"><i data-level="90"></i></div></div>
-      <div class="skill-row"><div class="top"><span data-i18n="sk2">Monte Carlo / Computational Physics</span><span>86%</span></div><div class="track"><i data-level="86"></i></div></div>
-      <div class="skill-row"><div class="top"><span data-i18n="sk3">MATLAB / COMSOL Modeling</span><span>82%</span></div><div class="track"><i data-level="82"></i></div></div>
-    </div>
-    <div class="reveal">
-      <div class="skill-row"><div class="top"><span data-i18n="sk4">PyTorch / Machine Learning</span><span>78%</span></div><div class="track"><i data-level="78"></i></div></div>
-      <div class="skill-row"><div class="top"><span data-i18n="sk5">C / C++ / Data Structures</span><span>80%</span></div><div class="track"><i data-level="80"></i></div></div>
-      <div class="skill-row"><div class="top"><span data-i18n="sk6">Scientific Writing / Documentation</span><span>88%</span></div><div class="track"><i data-level="88"></i></div></div>
-    </div>
-  </div>
+  <div class="skills" id="skillsGrid"></div>
 </section>
 
 <section id="journey">
   <div class="sec-head reveal"><div class="kicker">// 06 · JOURNEY</div><h2 data-i18n="journey_h2">人生<em>里程</em></h2><div class="rule"></div></div>
-  <div class="timeline">
-    <div class="tl-item reveal"><div class="when" data-i18n="j1when">2023 - Present</div><h3 data-i18n="j1t">杭州师范大学 · 物理系</h3><p data-i18n="j1d">攻读物理学学士，参与 IYPT、计算物理与科学建模研究。</p></div>
-    <div class="tl-item reveal"><div class="when" data-i18n="j2when">2025 - Present</div><h3 data-i18n="j2t">研究与实践</h3><p data-i18n="j2d">围绕蒙特卡洛模拟、物理信息神经网络与复杂物理系统开展合作研究。</p></div>
-    <div class="tl-item reveal"><div class="when" data-i18n="j3when">2026</div><h3 data-i18n="j3t">开源与教学工具</h3><p data-i18n="j3d">建设 GitHub 项目集，用自动化工具服务科研与学习。</p></div>
-  </div>
+  <div class="timeline" id="timelineGrid"></div>
 </section>
 
 <section id="contact">
   <div class="sec-head reveal"><div class="kicker">// 07 · CONTACT</div><h2 data-i18n="contact_h2">联系<em>我</em></h2><div class="rule"></div></div>
-  <div class="contact-wrap">
-    <a class="contact-card reveal" href="https://www.researchgate.net/profile/Jizhong-Shen" target="_blank">
-      <div class="icon" style="color:#0aa37c;border-color:rgba(10,163,124,.3);background:rgba(10,163,124,.08)"><i class="fa-solid fa-flask"></i></div>
-      <div><div class="k" data-i18n="c_rg">学术主页 · ResearchGate</div><div class="v">Jizhong-Shen ↗</div></div></a>
-    <a class="contact-card reveal" href="https://github.com/github-sjz-ui" target="_blank">
-      <div class="icon"><i class="fa-brands fa-github"></i></div>
-      <div><div class="k" data-i18n="c_gh">开源 · GitHub</div><div class="v">github-sjz-ui ↗</div></div></a>
-    <a class="contact-card reveal" href="https://www.researchgate.net/institution/Hangzhou-Normal-University" target="_blank">
-      <div class="icon" style="color:var(--pink);border-color:rgba(217,70,176,.3);background:rgba(217,70,176,.08)"><i class="fa-solid fa-university"></i></div>
-      <div><div class="k" data-i18n="c_uni">学校 · Hangzhou Normal University</div><div class="v">Department of Physics ↗</div></div></a>
-  </div>
+  <div class="contact-wrap" id="contactGrid"></div>
 </section>
 
 <footer>
   © <span id="year"></span> Jizhong Shen <span data-i18n="footer_made">· 用</span> <span class="heart">♥</span>
   <span data-i18n="footer_made2">&amp; Canvas 打造 ·</span>
-  <a href="https://github.com/github-sjz-ui" target="_blank">GitHub</a>
+  <a href="https://github.com/github-sjz-ui" target="_blank" class="js-gh-link">GitHub</a>
 </footer>
 
 <script>
-/* ============================================================
-   CONFIG —— 只需改这里
-   semanticScholarAuthorId 填入你的 Semantic Scholar 作者 ID
-   （在 semanticscholar.org 搜自己名字，URL 里的数字串），
-   论文与被引数即自动拉取真实数据；留空则显示空态。
-   ============================================================ */
-const CONFIG = {
-  githubUser: 'github-sjz-ui',
-  semanticScholarAuthorId: ''   // 例如 '17294159'
-};
-
-/* ResearchGate public profile data, captured from the live profile. */
-const PUBLICATIONS = [
-  { title:'Torsional standing waves in a twisted elastic cord: experiment and reduced-order modelling', venue:'Preprint', year:2026, url:'https://www.researchgate.net/publication/413675055_Torsional_standing_waves_in_a_twisted_elastic_cord_experiment_and_reduced-order_modelling' },
-  { title:'dataset_description.pdf', venue:'Data', year:2026, url:'https://www.researchgate.net/publication/413675077_dataset_descriptionpdf' },
-  { title:'Boundary-element treatment of electrostatic shielding by an open hemispherical conductor: edge singularity, convergence, and teaching implications', venue:'Preprint', year:2026, url:'https://www.researchgate.net/publication/412837443_Boundary-element_treatment_of_electrostatic_shielding_by_an_open_hemispherical_conductor_edge_singularity_convergence_and_teaching_implications' },
-  { title:'QuanLLM-v1.0-qm and QuanLLM CLI v0.4.0: A Domain-Adapted Language Model System for Quantum-Mechanics Learning and Problem Solving', venue:'Preprint', year:2026, url:'https://www.researchgate.net/publication/412833936_QuanLLM-v10-qm_and_QuanLLM_CLI_v040_A_Domain-Adapted_Language_Model_System_for_Quantum-Mechanics_Learning_and_Problem_Solving' },
-  { title:'Kinematics and diversified modeling of an inclined-plane flipping body: a modeling study of the 2026 IYPT "Flipo Flip" problem', venue:'Preprint', year:2026, url:'https://www.researchgate.net/publication/412318211_Kinematics_and_diversified_modeling_of_an_inclined-plane_flipping_body_a_modeling_study_of_the_2026_IYPT_Flipo_Flip_problem' },
-  { title:'折反之间，快慢有律——光屏上两光斑移动速度关联探究', venue:'Preprint', year:2026, url:'https://www.researchgate.net/publication/412298360_zhefanzhijiankuaimanyoulu--guangpingshangliangguangbanyidongsuduguanliantanjiu' },
-  { title:'Pinhole Sunglasses for IYPT 2027: Aperture Shape, Lattice Arrangement, Ghost Suppression, and Neural-Network-Accelerated Inverse Design', venue:'Article', year:2026, url:'https://www.researchgate.net/publication/412121070_Pinhole_Sunglasses_for_IYPT_2027_Aperture_Shape_Lattice_Arrangement_Ghost_Suppression_and_Neural-Network-Accelerated_Inverse_Design' },
-  { title:'The Vibrational Dispersion Relations of M (M ≤ 3)-Dimensional N (N ≤ 4)-Atom Lattices: Complete Analytical Solutions and Numerical Verification for 36 Parameter Combinations', venue:'Preprint', year:2026, url:'https://www.researchgate.net/publication/410938152_The_Vibrational_Dispersion_Relations_of_M_M_3-Dimensional_N_N_4-Atom_Lattices_Complete_Analytical_Solutions_and_Numerical_Verification_for_36_Parameter_Combinations' },
-  { title:'Fractional Physics Informed Neural Networks for Surrogate Modeling of Non-Markovian Discrete-Time Quantum Walks', venue:'Entropy', year:2026, url:'https://www.researchgate.net/publication/410941636_Fractional_Physics_Informed_Neural_Networks_for_Surrogate_Modeling_of_Non-Markovian_Discrete-Time_Quantum_Walks' }
-];
+const CONFIG = window.SITE_CONTENT.profile;
 
 /* ================= i18n ================= */
 const I18N = {
@@ -372,64 +303,32 @@ const I18N = {
     nav_home:'首页',nav_about:'关于',nav_research:'研究方向',nav_works:'论文与项目',
     nav_skills:'技能',nav_journey:'里程',nav_contact:'联系',
     hero_hi:'你好，我是',hero_prefix:'我是 ',
-    hero_desc:'用计算与建模理解物理系统：从蒙特卡洛模拟、高能与粒子物理到机器学习方法和科研教学工具。',
+    hero_desc:'聚焦 BESIII 粲物理：从 D 介子与粲偶素的分析，到蒙特卡洛模拟与机器学习方法。',
     btn_works:'研究成果',stat_papers:'论文',stat_repos:'开源仓库',stat_reads:'阅读量',stat_cites:'被引',
-    about_h2:'关于<em>我</em>',
-    about_p1:'我是 <b>Jizhong Shen</b>（沈纪中），杭州师范大学物理系本科生，研究兴趣集中在 <b>计算物理、高能与粒子物理、蒙特卡洛模拟</b> 与机器学习方法。',
-    about_p2:'我也在 GitHub（<b>github-sjz-ui</b>）上维护科研与教学工具，把 IYPT 建模、课程资料、文档生成和 AI 辅助学习等工作流程代码化。',
-    research_h2:'研究<em>方向</em>',
-    dir1t:'蒙特卡洛模拟',dir1d:'面向粒子物理与高能物理问题的随机建模、事件模拟与统计验证。',
-    dir2t:'计算物理与建模',dir2d:'结合 COMSOL、MATLAB、降阶模型和工程近似研究非线性动力学与波动现象。',
-    dir3t:'物理与机器学习',dir3d:'发展物理信息神经网络、代理模型和数据驱动方法，加速复杂物理系统分析。',
-    dir4t:'科学工具与教育',dir4d:'围绕物理学习、IYPT 准备与文档自动化构建开源工具，让研究流程更可复现。',
+    about_h2:'关于<em>我</em>',research_h2:'研究<em>方向</em>',
     works_h2:'论文与<em>项目</em>',works_pubs:'代表论文',works_repos:'开源项目',
     works_note:'（在线时自动读取 GitHub 实时数据）',view_all:'查看全部仓库',
     empty_title:'论文列表待补全',
     empty_desc:'ResearchGate 不提供公开数据接口。前往主页查看全部论文，或在 CONFIG 中填入 Semantic Scholar 作者 ID 自动拉取。',
-    empty_go:'前往 ResearchGate ↗',src_ss:'数据来源：Semantic Scholar',nodesc:'（暂无描述）',
-    skills_h2:'技术<em>栈</em>',
-    sk1:'Python / 科学计算',sk2:'Monte Carlo / Computational Physics',sk3:'MATLAB / COMSOL Modeling',
-    sk4:'PyTorch / Machine Learning',sk5:'C / C++ / Data Structures',sk6:'Scientific Writing / Documentation',
-    journey_h2:'人生<em>里程</em>',
-    j1when:'2023 - 至今',j1t:'杭州师范大学 · 物理系',j1d:'攻读物理学学士，参与 IYPT、计算物理与科学建模研究。',
-    j2when:'2025 - 至今',j2t:'研究与实践',j2d:'围绕蒙特卡洛模拟、物理信息神经网络与复杂物理系统开展合作研究。',
-    j3when:'2026',j3t:'开源与教学工具',j3d:'建设 GitHub 项目集，用自动化工具服务科研与学习。',
-    contact_h2:'联系<em>我</em>',c_rg:'学术主页 · ResearchGate',c_gh:'开源 · GitHub',c_uni:'学校 · Hangzhou Normal University',
+    empty_go:'前往 ResearchGate ↗',nodesc:'（暂无描述）',
+    skills_h2:'技术<em>栈</em>',journey_h2:'人生<em>里程</em>',contact_h2:'联系<em>我</em>',
     footer_made:'· 用',footer_made2:'&amp; Canvas 打造 ·'
   },
   en:{
     nav_home:'Home',nav_about:'About',nav_research:'Research',nav_works:'Papers & Projects',
     nav_skills:'Skills',nav_journey:'Journey',nav_contact:'Contact',
     hero_hi:"Hi, I'm",hero_prefix:"I'm ",
-    hero_desc:'Using computation and modeling to understand physical systems — from Monte Carlo simulation and high-energy physics to machine learning and scientific tools.',
+    hero_desc:'Charm physics at BESIII — from D-meson and charmonium analyses to Monte Carlo simulation and machine learning methods.',
     btn_works:'Research Work',stat_papers:'Papers',stat_repos:'Repos',stat_reads:'Reads',stat_cites:'Citations',
-    about_h2:'About <em>Me</em>',
-    about_p1:"I'm <b>Jizhong Shen</b>, a B.S. student in the Department of Physics at Hangzhou Normal University, focusing on <b>computational physics, high-energy physics, particle physics and Monte Carlo simulation</b>.",
-    about_p2:'I also maintain research and teaching tools on GitHub (<b>github-sjz-ui</b>), turning IYPT modeling, course material and documentation workflows into reusable open-source code.',
-    research_h2:'Research <em>Areas</em>',
-    dir1t:'Monte Carlo Simulation',dir1d:'Stochastic modeling, event simulation and statistical validation for particle and high-energy physics problems.',
-    dir2t:'Computational Physics',dir2d:'Studying nonlinear dynamics and wave phenomena with COMSOL, MATLAB, reduced-order models and engineering approximations.',
-    dir3t:'Physics & Machine Learning',dir3d:'Physics-informed neural networks, surrogate models and data-driven methods for complex physical systems.',
-    dir4t:'Scientific Tools & Education',dir4d:'Open-source utilities for physics learning, IYPT preparation and reproducible research workflows.',
+    about_h2:'About <em>Me</em>',research_h2:'Research <em>Areas</em>',
     works_h2:'Papers & <em>Projects</em>',works_pubs:'Selected Papers',works_repos:'Open Source',
     works_note:'(live from GitHub API)',view_all:'View All Repos',
     empty_title:'Publications pending',
     empty_desc:'ResearchGate offers no public API. Check the full list there, or set your Semantic Scholar author ID in CONFIG to auto-load papers.',
-    empty_go:'Open ResearchGate ↗',src_ss:'Source: Semantic Scholar',nodesc:'(No description)',
-    skills_h2:'Tech <em>Stack</em>',
-    sk1:'Python / Scientific Computing',sk2:'Monte Carlo / Computational Physics',sk3:'MATLAB / COMSOL Modeling',
-    sk4:'PyTorch / Machine Learning',sk5:'C / C++ / Data Structures',sk6:'Scientific Writing / Documentation',
-    journey_h2:'My <em>Journey</em>',
-    j1when:'2023 - Present',j1t:'Hangzhou Normal University · Physics',j1d:'B.S. student working on IYPT, computational physics and scientific modeling.',
-    j2when:'2025 - Present',j2t:'Research & Practice',j2d:'Collaborative work on Monte Carlo simulation, physics-informed neural networks and complex physical systems.',
-    j3when:'2026',j3t:'Open Source & Teaching Tools',j3d:'Building GitHub projects and automation tools for research and learning.',
-    contact_h2:'Contact <em>Me</em>',c_rg:'Academic · ResearchGate',c_gh:'Open Source · GitHub',c_uni:'University · Hangzhou Normal University',
+    empty_go:'Open ResearchGate ↗',nodesc:'(No description)',
+    skills_h2:'Tech <em>Stack</em>',journey_h2:'My <em>Journey</em>',contact_h2:'Contact <em>Me</em>',
     footer_made:'· Crafted with',footer_made2:'&amp; Canvas ·'
   }
-};
-const TYPE_WORDS = {
-  zh:['计算物理学习者','蒙特卡洛模拟探索者','物理建模实践者','开源工具构建者'],
-  en:['Computational Physics Student','Monte Carlo Explorer','Physics Modeling Practitioner','Scientific Tools Builder']
 };
 let lang=(document.documentElement.lang||'zh-CN').startsWith('zh')?'zh':'en';
 const t=k=>I18N[lang][k]||k;
@@ -453,7 +352,7 @@ function renderWorks(papers){
     g.innerHTML=`<div class="card pub reveal visible">
       <div class="venue"><i class="fa-solid fa-flask"></i> ResearchGate</div>
       <h3>${t('empty_title')}</h3><p>${t('empty_desc')}</p>
-      <div class="meta"><a href="https://www.researchgate.net/profile/Jizhong-Shen" target="_blank">${t('empty_go')}</a></div></div>`;
+      <div class="meta"><a href="${CONFIG.researchGateUrl}" target="_blank">${t('empty_go')}</a></div></div>`;
     return;
   }
   papers.forEach(p=>{
@@ -464,7 +363,7 @@ function renderWorks(papers){
       <h3>${p.title||'Untitled'}</h3>
       <div class="meta"><span>${who}</span>
       ${p.url?`<a href="${p.url}" target="_blank">ResearchGate ↗</a>`:''}
-      <a href="https://www.researchgate.net/profile/Jizhong-Shen" target="_blank">ResearchGate ↗</a></div></div>`);
+      <a href="${CONFIG.researchGateUrl}" target="_blank">ResearchGate ↗</a></div></div>`);
   });
   document.querySelector('.sub-label .note')?.remove(); // 论文标签下的占位提示已在 works_note
 }
@@ -473,7 +372,7 @@ function renderRepos(){
   const g=document.getElementById('repoGrid');g.innerHTML='';
   if(!reposData){
     g.innerHTML=`<div class="card repo reveal visible"><div class="repo-head">
-      <a href="https://github.com/github-sjz-ui" target="_blank">github-sjz-ui ↗</a><span class="lang">—</span></div>
+      <a href="${CONFIG.githubUrl}" target="_blank">${CONFIG.githubUser} ↗</a><span class="lang">—</span></div>
       <p>${lang==='zh'?'访问 GitHub 主页查看全部仓库。':'Visit the GitHub profile for all repositories.'}</p>
       <div class="meta2"><span><i class="fa-solid fa-star"></i> —</span><span><i class="fa-solid fa-code-branch"></i> —</span></div></div>`;
     return;
@@ -488,52 +387,120 @@ function renderRepos(){
       <span><i class="fa-regular fa-clock"></i> ${new Date(r.updated_at).toLocaleDateString()}</span></div></div>`);
   });
 }
+function renderStaticContent(){
+  const c=window.SITE_CONTENT;
+  document.getElementById('aboutText').innerHTML=c.profile.about[lang].map(p=>`<p>${p}</p>`).join('');
+  document.getElementById('aboutChips').innerHTML=c.profile.tags.map(tag=>`<span class="chip">${tag}</span>`).join('');
+  document.getElementById('researchGrid').innerHTML=c.research.map(item=>`
+    <div class="card tilt reveal visible"><div class="icon"><i class="${item.icon}"></i></div>
+      <h3>${item[lang].title}</h3><p>${item[lang].desc}</p></div>`).join('');
+
+  const columns=[[],[]];
+  c.skills.forEach((skill,i)=>columns[Math.floor(i/3)%2].push(`
+    <div class="skill-row reveal visible"><div class="top"><span>${skill.name[lang]}</span><span>${skill.level}%</span></div>
+      <div class="track"><i style="width:${skill.level}%"></i></div></div>`));
+  document.getElementById('skillsGrid').innerHTML=columns.map(col=>`<div>${col.join('')}</div>`).join('');
+
+  document.getElementById('timelineGrid').innerHTML=c.timeline.map(item=>`
+    <div class="tl-item reveal visible"><div class="when">${item.when[lang]}</div>
+      <h3>${item.title[lang]}</h3><p>${item.desc[lang]}</p></div>`).join('');
+
+  document.getElementById('contactGrid').innerHTML=c.contact.map(item=>`
+    <a class="contact-card reveal visible" href="${item.url}" target="_blank">
+      <div class="icon"${item.color?` style="color:${item.color};border-color:${item.color}"`:''}><i class="${item.icon}"></i></div>
+      <div><div class="k">${item.title[lang]}</div><div class="v">${item.value} ↗</div></div></a>`).join('');
+  document.getElementById('heroName').textContent=c.profile.name;
+  document.querySelectorAll('.js-gh-link').forEach(a=>a.href=c.profile.githubUrl);
+}
 function applyLang(l){
   lang=l;try{localStorage.setItem('jsz-lang',l)}catch(e){}
   document.documentElement.lang=l==='zh'?'zh-CN':'en';
   document.title=l==='zh'?'Jizhong Shen · 个人主页':'Jizhong Shen · Personal Site';
   document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=I18N[l][el.dataset.i18n]??el.innerHTML});
   langBtn.textContent=l==='zh'?'EN':'中';
-  startTyping();renderWorks(lastPapers);renderRepos();
+  renderStaticContent();startTyping();renderWorks(lastPapers);renderRepos();
 }
 langBtn.onclick=()=>applyLang(lang==='zh'?'en':'zh');
 
-/* ================= 粒子背景（随主题变色） ================= */
+/* ================= 粒子光场背景（无连线，随主题变色） ================= */
 const cvs=document.getElementById('bg'),ctx=cvs.getContext('2d');
-let W,H,pts=[],mouse={x:null,y:null};
-const N=Math.min(90,Math.floor(innerWidth/16));
-let pDot,pLine;
+let W,H,pts=[],mouse={x:null,y:null},T=0;
+let pDots,flashRGB;
 function updateParticleColors(){
-  if(theme==='light'){pDot='rgba(106,77,240,.55)';pLine=(a)=>`rgba(8,145,178,${a})`}
-  else{pDot='rgba(0,240,255,.65)';pLine=(a)=>`rgba(123,92,255,${a})`}
+  if(theme==='light'){
+    pDots=['rgba(106,77,240,','rgba(8,145,178,','rgba(217,70,176,'];
+    flashRGB='106,77,240';
+  }else{
+    pDots=['rgba(0,240,255,','rgba(123,92,255,','rgba(255,78,205,'];
+    flashRGB='0,240,255';
+  }
 }
 updateParticleColors();
-function resize(){W=cvs.width=innerWidth;H=cvs.height=innerHeight}
+function seedDots(){
+  const N=Math.min(140,Math.floor(innerWidth/12));
+  for(let i=0;i<N;i++){
+    const z=.35+Math.random()*.65;
+    pts.push({x:Math.random()*W,y:Math.random()*H,z,ci:i%3,
+      vx:(Math.random()-.5)*.5*z,vy:(Math.random()-.5)*.5*z,
+      r:(1+Math.random()*2.2)*z,tw:.5+Math.random()*1.5,ph:Math.random()*Math.PI*2});
+  }
+}
+function resize(){W=cvs.width=innerWidth;H=cvs.height=innerHeight;if(!pts.length)seedDots()}
 resize();addEventListener('resize',resize);
-for(let i=0;i<N;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.55,vy:(Math.random()-.5)*.55,r:1+Math.random()*1.6});
 addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
 addEventListener('mouseout',()=>{mouse.x=null;mouse.y=null});
+
+/* 点击：粒子爆散 + 光晕脉冲（无任何线条） */
+let burst=[],flash=null;
+addEventListener('pointerdown',e=>spawnBurst(e.clientX,e.clientY));
+function spawnBurst(x,y){
+  const count=24+Math.floor(Math.random()*10);
+  for(let i=0;i<count;i++){
+    const a=Math.random()*Math.PI*2,sp=1+Math.random()*4.5;
+    burst.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,
+      decay:.012+Math.random()*.02,r:1.2+Math.random()*2.4,ci:i%3});
+  }
+  flash={x,y,r:12,life:1};
+}
 (function loop(){
   ctx.clearRect(0,0,W,H);
   for(const p of pts){
     p.x+=p.vx;p.y+=p.vy;
-    if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    let ox=0,oy=0;
     if(mouse.x){const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.hypot(dx,dy);
-      if(d<150){p.x+=dx/d*.8;p.y+=dy/d*.8}}
-    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fillStyle=pDot;ctx.fill();
+      if(d<140&&d>0){const f=(1-d/140)*12*p.z;ox=dx/d*f;oy=dy/d*f}}
+    const a=(.22+.5*Math.abs(Math.sin(T*p.tw+p.ph)))*p.z;
+    ctx.beginPath();ctx.arc(p.x+ox,p.y+oy,p.r,0,7);
+    ctx.fillStyle=pDots[p.ci]+a+')';ctx.fill();
   }
-  for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
-    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
-    if(d<130){ctx.strokeStyle=pLine((1-d/130)*.4);ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke()}
+  if(flash){
+    const g=ctx.createRadialGradient(flash.x,flash.y,0,flash.x,flash.y,flash.r);
+    g.addColorStop(0,`rgba(${flashRGB},${flash.life*.35})`);
+    g.addColorStop(1,`rgba(${flashRGB},0)`);
+    ctx.fillStyle=g;ctx.fillRect(flash.x-flash.r,flash.y-flash.r,flash.r*2,flash.r*2);
+    flash.r+=3.5;flash.life-=.03;
+    if(flash.life<=0)flash=null;
   }
+
+  ctx.globalCompositeOperation=theme==='dark'?'lighter':'source-over';
+  burst.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.vx*=.985;p.vy*=.985;p.life-=p.decay;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);
+    ctx.fillStyle=pDots[p.ci]+p.life+')';ctx.fill();
+  });
+  burst=burst.filter(p=>p.life>0);
+
+  ctx.globalCompositeOperation='source-over';
+
+  T+=.016;
   requestAnimationFrame(loop);
 })();
 
 /* ================= 打字机（支持双语重启） ================= */
 const typed=document.getElementById('typed');let gen=0;
 function startTyping(){
-  const my=++gen,words=TYPE_WORDS[lang];let wi=0,ci=0,del=false;
+  const my=++gen,words=CONFIG.typedWords[lang];let wi=0,ci=0,del=false;
   (function step(){
     if(my!==gen)return;
     const w=words[wi];typed.textContent=w.slice(0,ci);
@@ -608,16 +575,11 @@ document.addEventListener('mouseover',e=>{
 
 /* ================= 真实数据：GitHub API ================= */
 (async()=>{
-  // Profile：头像 + 公开仓库数
+  // Profile：公开仓库数
   try{
     const res=await fetch(`https://api.github.com/users/${CONFIG.githubUser}`);
     if(res.ok){
       const u=await res.json();
-      if(u.avatar_url){
-        const av=document.querySelector('.avatar');
-        const img=document.createElement('img');img.src=u.avatar_url;img.alt='Jizhong Shen';
-        av.appendChild(img);document.getElementById('avatarFallback').style.display='none';
-      }
       const sr=document.getElementById('statRepos');
       sr.dataset.count=u.public_repos||0;animateCount(sr,u.public_repos||0);
     }
@@ -630,7 +592,7 @@ document.addEventListener('mouseover',e=>{
 })();
 
 /* ================= 真实数据：Semantic Scholar（可选，填 ID 即启用） ================= */
-let lastPapers=PUBLICATIONS;
+let lastPapers=window.SITE_CONTENT.publications;
 (async()=>{
   if(!CONFIG.semanticScholarAuthorId)return;
   try{
@@ -649,6 +611,9 @@ let lastPapers=PUBLICATIONS;
 })();
 
 /* ================= 启动 ================= */
+document.getElementById('statPapers').dataset.count=window.SITE_CONTENT.stats.papers;
+document.getElementById('statReads').dataset.count=window.SITE_CONTENT.stats.reads;
+document.getElementById('statCites').dataset.count=window.SITE_CONTENT.stats.citations;
 applyLang(lang);           // 初始化文案（含打字机 + 动态区块）
 setTheme(theme);           // 同步主题图标与粒子色
 setTimeout(()=>{           // hero 统计数字入场
